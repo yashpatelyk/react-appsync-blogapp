@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { listPosts } from '../../graphql/queries';
-import { deletePost } from '../../graphql/mutations';
-import { onCreatePost, onDeletePost, onCreateComment } from '../../graphql/subscriptions';
-import { API, graphqlOperation } from 'aws-amplify';
+import { onCreatePost, onDeletePost, onCreateComment, onCreateLike } from '../../graphql/subscriptions';
+import { API, graphqlOperation, Auth } from 'aws-amplify';
 
 import './DisplayPosts.css';
 
@@ -10,10 +9,14 @@ import DeletePost from '../DeletePost/DeletePost'
 import EditPost from '../EditPost/EditPost';
 import CreateComment from '../CreateComment/CreateComment';
 import Comment from '../Comment/Comment';
+import { createLike } from '../../graphql/mutations';
 
 export default class DisplayPosts extends Component {
   state = {
-    posts: []
+    posts: [],
+    ownerUserName: '',
+    ownerUserId: '',
+    errorMessage: '',
   };
   createPostSubscription;
   deletePostSubscription;
@@ -21,6 +24,13 @@ export default class DisplayPosts extends Component {
 
   componentDidMount = async () => {
     this.getPosts();
+
+    await Auth.currentUserInfo().then( userInfo => {
+      this.setState({
+        ownerUserId: userInfo.attributes.sub,
+        ownerUserName: userInfo.username,
+      });
+    } );
 
     this.createPostSubscription = API.graphql(graphqlOperation( onCreatePost )).subscribe( postData => {
       const post = postData.value.data.onCreatePost;
@@ -44,6 +54,15 @@ export default class DisplayPosts extends Component {
         this.setState({ posts });
       }
     } );
+    this.createLikeSubscription = API.graphql( graphqlOperation( onCreateLike ) ).subscribe( likeData => {
+      const like = likeData.value.data.onCreateLike;
+      const posts = [...this.state.posts];
+      const matchingPost = posts.find( post => post.id === like.post.id );
+      if ( matchingPost ) {
+        matchingPost.likes.items.push( like );
+        this.setState({ posts });
+      }
+    } );
 
   }
 
@@ -62,6 +81,33 @@ export default class DisplayPosts extends Component {
     })
   }
 
+  handleLike = async ( post ) => {
+    if ( post.postOwnerId === this.state.ownerUserId ) {
+       this.setState({
+         errorMessage: "Can not like your own post"
+       })
+    } else if ( this.hasLikedPost( post ) ) {
+      this.setState({
+        errorMessage: "You have already liked this post"
+      })
+    } else {
+      const input = {
+        numberLikes: 1,
+        likeOwnerId: this.state.ownerUserId,
+        likeOwnerUsername: this.state.ownerUserName,
+        likePostId: post.id,
+      }
+      await API.graphql( graphqlOperation( createLike, { input } ) );
+    }
+    
+  }
+
+  hasLikedPost = ( post ) => {
+    return post.likes.items.find( like => {
+      return like.likeOwnerId === this.state.ownerUserId;
+    } )
+  }
+
   render() {
     const { posts } = this.state;
     return (
@@ -78,8 +124,15 @@ export default class DisplayPosts extends Component {
             </time>
           </span>
           <p>{ post.postBody }</p>
-          <EditPost />
-          <DeletePost id={ post.id }/>
+          <button
+            onClick={this.handleLike.bind( this, post )}
+          >
+            Like
+          </button>
+          { this.state.errorMessage }
+          <p>{ post.likes.items.length }</p>
+          { post.postOwnerId === this.state.ownerUserId ? <EditPost /> : '' }
+          { post.postOwnerId === this.state.ownerUserId ? <DeletePost id={ post.id }/> : '' }
           <CreateComment postId={ post.id }/>
           { post.comments.items.map( comment => (
             <Comment {...comment} key={comment.id}/>

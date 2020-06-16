@@ -52,6 +52,7 @@ export const listPosts = /* GraphQL */ `
         createdAt
         comments {
           items {
+            id
             commentOwnerId
             commentOwnerUsername
             content
@@ -60,6 +61,7 @@ export const listPosts = /* GraphQL */ `
         }
         likes {
           items {
+            id
             numberLikes
             likeOwnerId
             likeOwnerUsername
