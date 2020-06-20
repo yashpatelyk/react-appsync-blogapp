@@ -35,7 +35,9 @@ export const createPost = /* GraphQL */ `
         }
         nextToken
       }
+      queryName
       updatedAt
+      owner
     }
   }
 `;
@@ -73,7 +75,9 @@ export const updatePost = /* GraphQL */ `
         }
         nextToken
       }
+      queryName
       updatedAt
+      owner
     }
   }
 `;
@@ -111,7 +115,9 @@ export const deletePost = /* GraphQL */ `
         }
         nextToken
       }
+      queryName
       updatedAt
+      owner
     }
   }
 `;
@@ -137,7 +143,9 @@ export const createComment = /* GraphQL */ `
         likes {
           nextToken
         }
+        queryName
         updatedAt
+        owner
       }
       content
       createdAt
@@ -167,7 +175,9 @@ export const updateComment = /* GraphQL */ `
         likes {
           nextToken
         }
+        queryName
         updatedAt
+        owner
       }
       content
       createdAt
@@ -197,7 +207,9 @@ export const deleteComment = /* GraphQL */ `
         likes {
           nextToken
         }
+        queryName
         updatedAt
+        owner
       }
       content
       createdAt
@@ -228,7 +240,9 @@ export const createLike = /* GraphQL */ `
         likes {
           nextToken
         }
+        queryName
         updatedAt
+        owner
       }
       createdAt
       updatedAt
@@ -258,7 +272,9 @@ export const updateLike = /* GraphQL */ `
         likes {
           nextToken
         }
+        queryName
         updatedAt
+        owner
       }
       createdAt
       updatedAt
@@ -288,7 +304,9 @@ export const deleteLike = /* GraphQL */ `
         likes {
           nextToken
         }
+        queryName
         updatedAt
+        owner
       }
       createdAt
       updatedAt

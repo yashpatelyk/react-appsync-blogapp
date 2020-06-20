@@ -1,4 +1,6 @@
-type Post @model {
+type Post @model 
+@auth(rules: [{ allow: owner operations: [create, update, delete] }])
+@key( name: "ByCreatedAt", fields:[ "queryName", "createdAt" ], queryField: "postByCreatedAt" ) {
   id: ID!
   postOwnerId: String!
   postOwnerUsername: String!
@@ -7,6 +9,7 @@ type Post @model {
   createdAt: String
   comments: [Comment] @connection(name: "PostComments")
   likes: [Like] @connection(name: "PostLikes")
+  queryName: String
 }
 
 type Comment @model {

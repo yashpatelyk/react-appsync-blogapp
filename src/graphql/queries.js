@@ -32,7 +32,9 @@ export const getPost = /* GraphQL */ `
         }
         nextToken
       }
+      queryName
       updatedAt
+      owner
     }
   }
 `;
@@ -51,23 +53,14 @@ export const listPosts = /* GraphQL */ `
         postBody
         createdAt
         comments {
-          items {
-            id
-            commentOwnerId
-            commentOwnerUsername
-            content
-            createdAt
-          }
+          nextToken
         }
         likes {
-          items {
-            id
-            numberLikes
-            likeOwnerId
-            likeOwnerUsername
-          }
+          nextToken
         }
+        queryName
         updatedAt
+        owner
       }
       nextToken
     }
@@ -92,7 +85,9 @@ export const getComment = /* GraphQL */ `
         likes {
           nextToken
         }
+        queryName
         updatedAt
+        owner
       }
       content
       createdAt
@@ -118,7 +113,9 @@ export const listComments = /* GraphQL */ `
           postTitle
           postBody
           createdAt
+          queryName
           updatedAt
+          owner
         }
         content
         createdAt
@@ -148,7 +145,9 @@ export const getLike = /* GraphQL */ `
         likes {
           nextToken
         }
+        queryName
         updatedAt
+        owner
       }
       createdAt
       updatedAt
@@ -174,10 +173,50 @@ export const listLikes = /* GraphQL */ `
           postTitle
           postBody
           createdAt
+          queryName
           updatedAt
+          owner
         }
         createdAt
         updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const postByCreatedAt = /* GraphQL */ `
+  query PostByCreatedAt(
+    $queryName: String
+    $createdAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelPostFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    postByCreatedAt(
+      queryName: $queryName
+      createdAt: $createdAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        postOwnerId
+        postOwnerUsername
+        postTitle
+        postBody
+        createdAt
+        comments {
+          nextToken
+        }
+        likes {
+          nextToken
+        }
+        queryName
+        updatedAt
+        owner
       }
       nextToken
     }

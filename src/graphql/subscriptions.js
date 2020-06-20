@@ -2,8 +2,8 @@
 // this is an auto generated file. This will be overwritten
 
 export const onCreatePost = /* GraphQL */ `
-  subscription OnCreatePost {
-    onCreatePost {
+  subscription OnCreatePost($owner: String!) {
+    onCreatePost(owner: $owner) {
       id
       postOwnerId
       postOwnerUsername
@@ -32,13 +32,15 @@ export const onCreatePost = /* GraphQL */ `
         }
         nextToken
       }
+      queryName
       updatedAt
+      owner
     }
   }
 `;
 export const onUpdatePost = /* GraphQL */ `
-  subscription OnUpdatePost {
-    onUpdatePost {
+  subscription OnUpdatePost($owner: String!) {
+    onUpdatePost(owner: $owner) {
       id
       postOwnerId
       postOwnerUsername
@@ -67,13 +69,15 @@ export const onUpdatePost = /* GraphQL */ `
         }
         nextToken
       }
+      queryName
       updatedAt
+      owner
     }
   }
 `;
 export const onDeletePost = /* GraphQL */ `
-  subscription OnDeletePost {
-    onDeletePost {
+  subscription OnDeletePost($owner: String!) {
+    onDeletePost(owner: $owner) {
       id
       postOwnerId
       postOwnerUsername
@@ -102,7 +106,9 @@ export const onDeletePost = /* GraphQL */ `
         }
         nextToken
       }
+      queryName
       updatedAt
+      owner
     }
   }
 `;
@@ -125,7 +131,9 @@ export const onCreateComment = /* GraphQL */ `
         likes {
           nextToken
         }
+        queryName
         updatedAt
+        owner
       }
       content
       createdAt
@@ -152,7 +160,9 @@ export const onUpdateComment = /* GraphQL */ `
         likes {
           nextToken
         }
+        queryName
         updatedAt
+        owner
       }
       content
       createdAt
@@ -179,7 +189,9 @@ export const onDeleteComment = /* GraphQL */ `
         likes {
           nextToken
         }
+        queryName
         updatedAt
+        owner
       }
       content
       createdAt
@@ -207,7 +219,9 @@ export const onCreateLike = /* GraphQL */ `
         likes {
           nextToken
         }
+        queryName
         updatedAt
+        owner
       }
       createdAt
       updatedAt
@@ -234,7 +248,9 @@ export const onUpdateLike = /* GraphQL */ `
         likes {
           nextToken
         }
+        queryName
         updatedAt
+        owner
       }
       createdAt
       updatedAt
@@ -261,7 +277,9 @@ export const onDeleteLike = /* GraphQL */ `
         likes {
           nextToken
         }
+        queryName
         updatedAt
+        owner
       }
       createdAt
       updatedAt
